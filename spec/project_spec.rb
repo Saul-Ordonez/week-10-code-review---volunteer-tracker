@@ -102,8 +102,19 @@ describe Project do
       project2.save()
       project3 = Project.new({:title => "Teaching Ruby to Kids", :id => nil})
       project3.save()
-      expect(Project.search("Kids")).to(eq([project1,project3]))
+      expect(Project.search("Kids")).to eq [project1,project3]
     end
   end
+
+  describe '.clear' do
+  it 'clears all projects' do
+    project = Project.new({:title => "Teaching Kids to Code", :id => nil})
+    project.save()
+    project2 = Project.new({:title => "Teaching Ruby to Kids", :id => nil})
+    project2.save()
+    Project.clear()
+    expect(Project.all).to eq []
+  end
+end
 
 end
