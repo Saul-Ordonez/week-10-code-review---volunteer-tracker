@@ -107,14 +107,14 @@ describe Project do
   end
 
   describe '.clear' do
-  it 'clears all projects' do
-    project = Project.new({:title => "Teaching Kids to Code", :id => nil})
-    project.save()
-    project2 = Project.new({:title => "Teaching Ruby to Kids", :id => nil})
-    project2.save()
-    Project.clear()
-    expect(Project.all).to eq []
+    it 'clears all projects' do
+      project = Project.new({:title => "Teaching Kids to Code", :id => nil})
+      project.save()
+      project2 = Project.new({:title => "Teaching Ruby to Kids", :id => nil})
+      project2.save()
+      Project.clear()
+      expect(Project.all).to eq []
+    end
   end
-end
 
 end
