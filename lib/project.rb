@@ -17,17 +17,17 @@ class Project
   projects
 end
 
+def save
+  result = DB.exec("INSERT INTO projects (title) VALUES ('#{@title}') RETURNING id;")
+  @id = result.first().fetch("id").to_i
+end
+
 def ==(project_to_compare)
   if project_to_compare != nil
     self.title() == project_to_compare.title()
   else
     false
   end
-end
-
-def save
-  result = DB.exec("INSERT INTO projects (title) VALUES ('#{@title}') RETURNING id;")
-  @id = result.first().fetch("id").to_i
 end
 
 def self.find(id)
@@ -48,6 +48,16 @@ end
 
 def delete()
   DB.exec("DELETE FROM projects WHERE id = #{@id};")
+  DB.exec("DELETE FROM volunteers WHERE project_id = #{@id};")
+end
+
+def self.search(x)
+  projects = self.all
+  projects.select {|e| /#{x}/i.match? e.title}
+end
+
+def self.clear
+  DB.exec("DELETE FROM projects *;")
 end
 
 def volunteers
