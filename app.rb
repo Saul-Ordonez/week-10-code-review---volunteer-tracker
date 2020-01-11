@@ -48,6 +48,11 @@ post ('/home') do
   end
 end
 
+get '/volunteer/new' do
+  @projects = Project.all
+  erb(:new_volunteer)
+end
+
 get("/destroy") do
   @project = Project.clear
   @volunteer = Volunteer.clear

@@ -1,0 +1,23 @@
+<h1>Add a New Volunteer</h1>
+
+<form action="/home" method="post">
+  <div class="form-group">
+    <select name = "title">
+      <%if @projects.any? %>
+      <% @projects.each do |project| %>
+      <option value = <%= project.id %>> <%= project.title%> </option>
+      <%end%>
+      <%else%>
+      <p> Add some projects </p>
+      <% end %>
+    </select>
+
+    <label for="name">Volunteer Name:</label>
+    <input id="n" name="name" class="form-control" type="text">
+
+  </div>
+
+  <button type="submit">Add a Volunteer</button>
+</form>
+
+<a href="/home">Home</a>

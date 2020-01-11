@@ -6,13 +6,11 @@
   <button type="submit" class="btn btn-primary">Go!</button>
 </form>
 
-<a href="/projects">Show all projects</a>
-
 <h3><center>Available projects</center></h3>
 <% if @projects.any? %>
 <ul>
   <% @projects.each do |project| %>
-  <li><a href="/projects/<%= project.id %>"><strong><%= project.title %></strong></li>
+  <li><a href="home/project/<%= project.id %>"><strong><%= project.title %></strong></li>
     <% end %>
   </ul>
   <% else %>
@@ -21,4 +19,17 @@
 
   <p><a href="/project/new">Create project</a></p>
 
-  <p><a id="warning" href="/destroy">DELETE ALL DATA</a></p>
+  <h3><center>Available volunteers</center></h3>
+  <% if @volunteers %>
+  <ul>
+    <% @volunteers.each do |volunteer| %>
+    <li><strong><%= volunteer.name %></strong></li>
+      <% end %>
+    </ul>
+    <% else %>
+    <p>There are currently no volunteers to display.</p>
+    <% end %>
+
+    <p><a href="/volunteer/new">Add Volunteer</a></p>
+
+    <p><a id="warning" href="/destroy">DELETE ALL DATA</a></p>
