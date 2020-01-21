@@ -1,0 +1,22 @@
+
+<h2>Projects</h2>
+
+<h3>Current Projects:</h3>
+<% if @projects.any? %>
+<ul>
+  <% @projects.each do |project| %>
+  <li><a href="/projects/<%= project.id %>"><%= project.title %></a></li>
+  <% end %>
+</ul>
+<% else %>
+<p>There are currently no projects to display.</p>
+<% end %>
+
+<h4>Add a New Project:</h4>
+
+<form action="/projects" method="post">
+  <div class="form-group">
+    <input name="title" class="form-control" type="text" placeholder="Project Title">
+  </div>
+  <button type="submit" class="btn">Create Project</button>
+</form>

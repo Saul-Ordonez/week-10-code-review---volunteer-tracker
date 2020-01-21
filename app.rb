@@ -1,60 +1,82 @@
 require('sinatra')
 require('sinatra/reloader')
-require('./lib/volunteer')
 require('./lib/project')
+require('./lib/volunteer')
 require('pry')
-require("pg")
-
+require('pg')
 also_reload('lib/**/*.rb')
 
 DB = PG.connect({:dbname => "volunteer_tracker"})
 
-get ('/') do
+get('/') do
   @projects = Project.all
-  @volunteers = Volunteer.all
-  erb(:home)
+  erb(:projects)
 end
 
-get ('/home') do
+
+get('/projects') do
   @projects = Project.all
-  @volunteers = Volunteer.all
-  erb(:home)
+  erb(:projects)
 end
 
-get('/project/new') do
-  erb(:new_project)
+post('/projects') do
+  title = params[:title]
+  project = Project.new({:title => title, :id => nil})
+  project.save()
+  @projects = Project.all()
+  erb(:projects)
 end
 
-post ('/home') do
-  if params[:title] && params[:name]
-    name = params[:name]
-    project_id = params[:title]
-    volunteer = Volunteer.new({:name => name, :project_id => project_id ,:id => nil})
-    volunteer.save
-    @projects = Project.all
-    @volunteers = Volunteer.all
-    erb(:home)
-  elsif params[:title]
-    title = params[:title]
-    project = Project.new({:title => title, :id => nil})
-    project.save
-    @projects = Project.all
-    @volunteers = Volunteer.all
-    erb(:home)
+get('/projects/:id') do
+  @project = Project.find(params[:id].to_i())
+  if @project == nil
+    erb(:go_back)
   else
-    @projects = Project.all
-    @volunteers = Volunteer.all
-    erb(:home)
+    erb(:project)
   end
 end
 
-get '/volunteer/new' do
-  @projects = Project.all
-  erb(:new_volunteer)
+get('/projects/:id/edit') do
+  @project = Project.find(params[:id].to_i())
+  erb(:edit_project)
 end
 
-get("/destroy") do
-  @project = Project.clear
-  @volunteer = Volunteer.clear
-  redirect to('/home')
+patch('/projects/:id') do
+  @project = Project.find(params[:id].to_i())
+  @project.update(params[:title])
+  @projects = Project.all
+  erb(:projects)
+end
+
+delete('/projects/:id') do
+  @project = Project.find(params[:id].to_i())
+  @project.delete()
+  @projects = Project.all
+  erb(:projects)
+end
+
+post('/projects/:id/volunteers') do
+  @project = Project.find(params[:id].to_i())
+  volunteer = Volunteer.new({:name => params[:name], :project_id => @project.id, :id =>nil})
+  volunteer.save()
+  erb(:project)
+end
+
+get('/projects/:id/volunteers/:volunteer_id') do
+  @volunteer = Volunteer.find(params[:volunteer_id].to_i())
+  erb(:volunteer)
+end
+
+patch('/projects/:id/volunteers/:volunteer_id') do
+  @project = Project.find(params[:id].to_i())
+  volunteer = Volunteer.find(params[:volunteer_id].to_i())
+  volunteer.update(params[:name], @project.id)
+  erb(:project)
+end
+
+delete('/projects/:id/volunteers/:volunteer_id') do
+  volunteer = Volunteer.find(params[:volunteer_id].to_i())
+  volunteer.delete
+  @project = Project.find(params[:id].to_i())
+  erb(:project)
 end
